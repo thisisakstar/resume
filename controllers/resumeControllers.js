@@ -3,13 +3,14 @@
 const pug = require('pug');
 const path = require('path');
 const fs = require('fs');
-const puppeteer = require('puppeteer');
+const puppeteer = require('puppeteer-core');
+var html_to_pdf = require('html-pdf-node');
 
 // ============================================================
 // import util
 const catchAsync = require('../util/catchAsync');
 const templateModel = require('../models/templateModel');
-const AppError = require('../util/appError');
+const AppError = require('../util/AppError');
 const resumeModel = require('../models/resumes/resumeModel');
 const encryptID = require('../util/uuid');
 
@@ -34,9 +35,6 @@ exports.buildResume = catchAsync(async (req, res, next) => {
     if (!templates)
         return next(new AppError('Resume Template not found!', 404));
 
-    // Launch a new browser instance
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
     switch (pugPath) {
         case 'resume':
             const parentDirPath = path.join(__dirname, '..');
@@ -105,33 +103,32 @@ exports.buildResume = catchAsync(async (req, res, next) => {
             req.resData.id = id;
         }
     }
+    // Launch a new browser instance
+
+    const params =
+        process.env.NODE_DEV === 'development'
+            ? {}
+            : {
+                  executablePath: '/home/ubuntu/chromium-browser',
+                  headless: true,
+                  args: ['--no-sandbox'],
+                  ignoreDefaultArgs: ['--disable-extensions']
+              };
 
     if (req.file) req.body.json.resumeData.profileImage = req.file;
-    // console.log(req.body);
+ 
     const template = fs.readFileSync(pugPath, 'utf8');
-
-    // Step 2: Compile the HTML template using pug
+ 
     const compiledTemplate = pug.compile(template);
-    // req.body.resumeData.profileImage = req.file.buffer;
-    // Step 4: Generate the HTML with dynamic content
-
+  
     const html = compiledTemplate(req.body.json.resumeData);
 
-    // Set the HTML content
-    await page.setContent(html);
+    let options = { format: 'A4' };
 
-    // Customize PDF options (optional)
-    const pdfOptions = {
-        format: 'A4'
-    };
-    // Generate the PDF
-    const pdfBuffer = await page.pdf(pdfOptions);
-
-    // // Save the PDF to a file
-    // fs.writeFileSync('output.pdf', pdfBuffer);
-
-    // Close the browser
-    await browser.close();
+    let file = { content: html };
+    const [pdfBuffer] = await Promise.all([
+        html_to_pdf.generatePdf(file, options)
+    ]);
 
     req.ufile = {
         name: fileName,
@@ -140,7 +137,7 @@ exports.buildResume = catchAsync(async (req, res, next) => {
     };
 
     req.resData.url = `https://db-resumes.s3.ap-south-1.amazonaws.com/${fileName}`;
-
+    req.resData.name = req.body.json.resumeData.resumeName;
     return next();
 });
 

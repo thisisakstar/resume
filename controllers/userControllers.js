@@ -10,7 +10,7 @@ const userModel = require('../models/user/userModel');
 const templateModel = require('../models/templateModel');
 const appReportModel = require('../models/appReportModel');
 const catchAsync = require('../util/catchAsync');
-const AppError = require('../util/appError');
+const AppError = require('../util/AppError');
 const encryptID = require('../util/uuid');
 const resumeModel = require('../models/resumes/resumeModel');
 
@@ -87,11 +87,7 @@ exports.uploadNewTemplate = catchAsync(async (req, res, next) => {
         }`
     );
     await fs.promises.writeFile(imageFileName, req.files.img[0].buffer);
-    console.log(
-        `/img/${uid}/${req.body.templateFileName}.${
-            req.files.img[0].mimetype.split('/')[1]
-        }`
-    );
+
     await templateModel.create({
         name: req.body.name,
         img: `/images/resume/${uid}/${req.body.templateFileName}.${

@@ -17,7 +17,7 @@ const factoryControllers = require('../controllers/factoryControllers');
 // ============================================================
 // Models
 
-const AppError = require('../util/appError');
+const AppError = require('../util/AppError');
 
 // ============================================================
 // routes

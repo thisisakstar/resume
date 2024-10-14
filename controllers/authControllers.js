@@ -11,7 +11,7 @@ let userModels = require('../models/user/userModel');
 // ============================================================
 // import utils
 let catchAsync = require('../util/catchAsync');
-let AppError = require('../util/appError');
+let AppError = require('../util/AppError');
 const sendMail = require('../util/sendMail');
 const encryptID = require('../util/uuid');
 
@@ -244,7 +244,6 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
         .createHash('sha256')
         .update(req.params.token)
         .digest('hex');
-    console.log(req.body);
     let user = await userModels.findOne({
         passwordResetToken: resetToken,
         passwordResetTokenExpires: { $gt: Date.now() }
