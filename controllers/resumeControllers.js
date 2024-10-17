@@ -3,8 +3,8 @@
 const pug = require('pug');
 const path = require('path');
 const fs = require('fs');
-const puppeteer = require('puppeteer-core');
 var html_to_pdf = require('html-pdf-node');
+const { chromium } = require('playwright');
 
 // ============================================================
 // import util
@@ -105,30 +105,19 @@ exports.buildResume = catchAsync(async (req, res, next) => {
     }
     // Launch a new browser instance
 
-    const params =
-        process.env.NODE_DEV === 'development'
-            ? {}
-            : {
-                  executablePath: '/home/ubuntu/chromium-browser',
-                  headless: true,
-                  args: ['--no-sandbox'],
-                  ignoreDefaultArgs: ['--disable-extensions']
-              };
-
     if (req.file) req.body.json.resumeData.profileImage = req.file;
- 
+
     const template = fs.readFileSync(pugPath, 'utf8');
- 
+
     const compiledTemplate = pug.compile(template);
-  
+
     const html = compiledTemplate(req.body.json.resumeData);
 
-    let options = { format: 'A4' };
-
-    let file = { content: html };
-    const [pdfBuffer] = await Promise.all([
-        html_to_pdf.generatePdf(file, options)
-    ]);
+    const browser = await chromium.launch({ headless: true });
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    await page.setContent(html);
+    const pdfBuffer = await page.pdf({ format: 'A4', printBackground: true });
 
     req.ufile = {
         name: fileName,

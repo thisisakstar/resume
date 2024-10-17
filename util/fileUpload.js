@@ -12,7 +12,8 @@ const multerStorage = multer.memoryStorage();
 function multerTemplateFilter(req, file, cb) {
     if (
         file.mimetype.startsWith('image') ||
-        file.originalname.endsWith('.pug')
+        file.originalname.endsWith('.pug') ||
+        file.originalname.endsWith('.html')
     ) {
         cb(null, true);
     } else {
@@ -70,6 +71,6 @@ exports.uploadFiles = catchAsync(async (req, res, next) => {
         return next(
             new AppError('Something went wrong while uploading your file.', 400)
         );
-    
+
     return next();
 });
