@@ -1,13 +1,25 @@
 {
-  "files": {
-    "main.css": "/static/css/main.d1ac9608.css",
-    "main.js": "/static/js/main.9099c53a.js",
-    "index.html": "/index.html",
-    "main.d1ac9608.css.map": "/static/css/main.d1ac9608.css.map",
-    "main.9099c53a.js.map": "/static/js/main.9099c53a.js.map"
-  },
-  "entrypoints": [
-    "static/css/main.d1ac9608.css",
-    "static/js/main.9099c53a.js"
-  ]
+    "short_name": "DB-Resumes | Unlimited Free Online Resume Builder | No Credit Card Required",
+    "name": "DB-Resumes",
+    "icons": [
+        {
+            "src": "favicon.ico",
+            "sizes": "64x64 32x32 24x24 16x16",
+            "type": "image/x-icon"
+        },
+        {
+            "src": "logo192.png",
+            "type": "image/png",
+            "sizes": "192x192"
+        },
+        {
+            "src": "logo512.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ],
+    "start_url": ".",
+    "display": "standalone",
+    "theme_color": "#000000",
+    "background_color": "#ffffff"
 }

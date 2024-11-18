@@ -27,7 +27,15 @@ const resumeSchema = new mongoose.Schema(
             objective: {
                 type: String,
                 required: [true, 'Objective should be included.']
-            }
+            },
+            profileImage: {
+                type: String,
+
+                default: 'abc.jpg'
+            },
+            linkedIn: String,
+            github: String,
+            youtube: String
         },
         contactDetails: {
             email: {
@@ -101,9 +109,6 @@ const resumeSchema = new mongoose.Schema(
 
         education: [
             {
-                courses: {
-                    type: Object
-                },
                 programName: {
                     type: String,
                     required: [
@@ -142,29 +147,7 @@ const resumeSchema = new mongoose.Schema(
                 }
             }
         ],
-        organization: [
-            {
-                role: { type: Object },
-                organizationName: {
-                    type: String,
-                    required: [true, 'Organization name should be included.']
-                },
-                from: {
-                    type: String,
-                    required: [true, 'From should be included in organization.']
-                },
-                to: {
-                    type: String,
-                    required: [
-                        function () {
-                            return !this.present;
-                        },
-                        'To should be included in organization.'
-                    ]
-                },
-                present: { type: Boolean, default: false }
-            }
-        ],
+
         projects: [
             {
                 projectName: {

@@ -35,6 +35,9 @@ router
     .post(
         authControllers.isLoggedin,
         fileUpload.uploadImg('img'),
+        resumeControllers.assignDataForUpdateProfile,
+        fileUpload.uploadFiles,
+        fileUpload.getPublicUrl,
         resumeControllers.buildResume,
         fileUpload.uploadFiles,
         responseControllers.sendResponseData()
@@ -48,6 +51,56 @@ router.get(
     factoryControllers.findAll(templateModel, { need: true }),
     responseControllers.sendResponseData()
 );
+
+// test template
+router.get(
+    '/test-template/:id',
+    authControllers.protect,
+    authControllers.restrictTo('admin'),
+    resumeControllers.testTemplate,
+    fileUpload.uploadFiles,
+    responseControllers.sendResponseData()
+);
+
+// manage status of template
+router.patch(
+    '/template/:status/:id',
+    authControllers.protect,
+    authControllers.restrictTo('admin'),
+    resumeControllers.assignDataforUpdate,
+    factoryControllers.findOneAndUpdate(templateModel, {
+        msg: 'Template not found!'
+    }),
+    responseControllers.sendEmptyJson()
+);
+
+router.post(
+    '/upload-template',
+    authControllers.protect,
+    authControllers.restrictTo('admin'),
+    fileUpload.uploadMultipleImages([
+        { name: 'img', maxCount: 1 },
+        { name: 'template', maxCount: 1 }
+    ]),
+    userControllers.uploadNewTemplate
+);
+
+router
+    .route('/manage-template/:id')
+    .patch(
+        authControllers.protect,
+        authControllers.restrictTo('admin'),
+        fileUpload.uploadMultipleImages([
+            { name: 'img', maxCount: 1 },
+            { name: 'template', maxCount: 1 }
+        ]),
+        userControllers.manageTemplate
+    )
+    .delete(
+        authControllers.protect,
+        authControllers.restrictTo('admin'),
+        userControllers.manageTemplate
+    );
 
 // ============================================================
 // export route

@@ -62,8 +62,9 @@ exports.uploadNewTemplate = catchAsync(async (req, res, next) => {
         return next(new AppError('All the Fields should be filled', 400));
 
     const uid = await encryptID();
+    const privateId = await encryptID();
     //save file
-    const pugFilePath = `${__dirname}/../html/resume/${uid}`;
+    const pugFilePath = `${__dirname}/../html/resume/${privateId}`;
     // Ensure the directory exists (create it if it doesn't)
     if (!fs.existsSync(pugFilePath)) {
         fs.mkdirSync(pugFilePath, { recursive: true });
@@ -94,6 +95,7 @@ exports.uploadNewTemplate = catchAsync(async (req, res, next) => {
             req.files.img[0].mimetype.split('/')[1]
         }`,
         temuId: uid,
+        privateId,
         templateFileName: req.body.templateFileName
     });
 
@@ -103,7 +105,9 @@ exports.uploadNewTemplate = catchAsync(async (req, res, next) => {
 // mange templte
 exports.manageTemplate = catchAsync(async (req, res, next) => {
     if (req.method === 'PATCH') {
-        const data = await templateModel.findOne({ temuId: req.params.id });
+        const data = await templateModel
+            .findOne({ temuId: req.params.id })
+            .select('+privateId');
         if (!data) return next(new AppError('Resume not found!', 404));
         if (!req.body.name || !req.body.templateFileName)
             return next(
@@ -116,8 +120,9 @@ exports.manageTemplate = catchAsync(async (req, res, next) => {
             data.templateFileName === req.body.templateFileName;
 
         const uid = req.params.id;
+        const privateId = data.privateId;
 
-        const pugFilePath = `${__dirname}/../html/resume/${uid}`;
+        const pugFilePath = `${__dirname}/../html/resume/${privateId}`;
         if (!fs.existsSync(pugFilePath)) {
             fs.mkdirSync(pugFilePath, { recursive: true });
         }
@@ -241,7 +246,13 @@ exports.manageTemplate = catchAsync(async (req, res, next) => {
 
         return res.status(200).json({ status: 'Success' });
     } else if (req.method === 'DELETE') {
-        const pugFilePath = `${__dirname}/../html/resume/${req.params.id}`;
+        const updatedData = await templateModel
+            .findOneAndDelete({
+                temuId: req.params.id
+            })
+            .select('+privateId');
+
+        const pugFilePath = `${__dirname}/../html/resume/${updatedData.privateId}`;
         const imgFilePth = `${__dirname}/../img/resume/${req.params.id}`;
 
         try {
@@ -275,9 +286,6 @@ exports.manageTemplate = catchAsync(async (req, res, next) => {
             );
         }
 
-        const updatedData = await templateModel.findOneAndDelete({
-            temuId: req.params.id
-        });
         if (!updatedData)
             return next(
                 new AppError(

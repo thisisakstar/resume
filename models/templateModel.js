@@ -28,6 +28,11 @@ const templateSchema = new mongoose.Schema(
             enum: ['waiting', 'accepted', 'rejected'],
             default: 'waiting'
         },
+        privateId: {
+            type: String,
+            required: true,
+            select: false
+        },
         reason: { type: String, select: false }
     },
     { timestamps: true }

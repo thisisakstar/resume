@@ -36,37 +36,6 @@ router.get(
     authControllers.restrictTo('admin'),
     userControllers.verifyUser
 );
-router.post(
-    '/upload-template',
-    authControllers.protect,
-    authControllers.restrictTo('admin'),
-    fileUpload.uploadMultipleImages([
-        { name: 'img', maxCount: 1 },
-        { name: 'template', maxCount: 1 }
-    ]),
-    userControllers.uploadNewTemplate
-);
-
-router
-    .route('/manage-template/:id')
-    .patch(
-        authControllers.protect,
-        authControllers.restrictTo('admin'),
-        fileUpload.uploadMultipleImages([
-            { name: 'img', maxCount: 1 },
-            { name: 'template', maxCount: 1 }
-        ]),
-        userControllers.manageTemplate
-    )
-    .delete(
-        authControllers.protect,
-        authControllers.restrictTo('admin'),
-        fileUpload.uploadMultipleImages([
-            { name: 'img', maxCount: 1 },
-            { name: 'template', maxCount: 1 }
-        ]),
-        userControllers.manageTemplate
-    );
 
 // app report
 router.post(

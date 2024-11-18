@@ -1,7 +1,12 @@
 // ============================================================
 // import packages
 const multer = require('multer');
-const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3');
+const {
+    S3Client,
+    PutObjectCommand,
+    GetObjectCommand
+} = require('@aws-sdk/client-s3');
+const { getSignedUrl } = require('@aws-sdk/s3-request-presigner');
 
 // ============================================================
 // import utlities
@@ -50,6 +55,7 @@ exports.uploadMultipleImages = (fields) => uploadTemplate.fields(fields);
 
 // upload single file in aws s3
 exports.uploadFiles = catchAsync(async (req, res, next) => {
+    if (!req.ufile) return next();
     const s3 = new S3Client({
         region: process.env.AWS_REGION,
         credentials: {
@@ -72,5 +78,31 @@ exports.uploadFiles = catchAsync(async (req, res, next) => {
             new AppError('Something went wrong while uploading your file.', 400)
         );
 
+    return next();
+});
+
+// get puplic url
+exports.getPublicUrl = catchAsync(async (req, res, next) => {
+    if (!req.ufile) return next();
+    const s3 = new S3Client({
+        region: process.env.AWS_REGION,
+        credentials: {
+            accessKeyId: process.env.AWS_ACCESS_KEY,
+            secretAccessKey: process.env.AWS_SECRET_KEY
+        }
+    });
+    const bucketName = process.env.AWS_BUCKET;
+    const objectKey = req.ufile.imgName;
+    const command = new GetObjectCommand({
+        Bucket: bucketName,
+        Key: objectKey
+    });
+    try {
+        const url = await getSignedUrl(s3, command, { expiresIn: 3600 });
+        req.tempUrl = url;
+    } catch (err) {
+        console.error('Error generating presigned URL:', err);
+        throw err;
+    }
     return next();
 });
