@@ -290,13 +290,6 @@ resumeSchema.index(
 );
 
 resumeSchema.index(
-    { 'organization.to': 1 },
-    {
-        partialFilterExpression: { 'organization.present': false }
-    }
-);
-
-resumeSchema.index(
     { 'certificates.to': 1 },
     {
         partialFilterExpression: { 'certificates.present': false }

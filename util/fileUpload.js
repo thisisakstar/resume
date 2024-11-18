@@ -83,7 +83,7 @@ exports.uploadFiles = catchAsync(async (req, res, next) => {
 
 // get puplic url
 exports.getPublicUrl = catchAsync(async (req, res, next) => {
-    if (!req.ufile) return next();
+    if (req.ufile) return next();
     const s3 = new S3Client({
         region: process.env.AWS_REGION,
         credentials: {

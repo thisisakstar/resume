@@ -39,7 +39,8 @@ exports.buildResume = catchAsync(async (req, res, next) => {
     }
 
     const uid = await encryptID();
-    const fileName = `resumes/${uid}-${req.body.json.resumeData.resumeName}.pdf`;
+    const date = new Date().toLocaleDateString().replaceAll('/', '-');
+    const fileName = `resumes/${date}/${uid}-${req.body.json.resumeData.resumeName}.pdf`;
     req.resData = {};
 
     if (req.user) {
@@ -97,10 +98,7 @@ exports.buildResume = catchAsync(async (req, res, next) => {
             req.resData.id = id;
         }
     }
-    req.body.json.resumeData.personalDetails.profileImage =
-        req.tempUrl ??
-        'https://db-resumes.s3.ap-south-1.amazonaws.com/default/default-profile.jpeg';
-
+    req.body.json.resumeData.personalDetails.profileImage = req.tempUrl;
     const template = fs.readFileSync(pugPath, 'utf8');
 
     const compiledTemplate = pug.compile(template);
@@ -111,7 +109,7 @@ exports.buildResume = catchAsync(async (req, res, next) => {
         4: 'Advanced',
         5: 'Proficient'
     };
-
+    console.log(req.body.json);
     const html = compiledTemplate(req.body.json.resumeData);
 
     const browser = await chromium.launch({ headless: true });
@@ -123,9 +121,8 @@ exports.buildResume = catchAsync(async (req, res, next) => {
 
     const pdfBuffer = await page.pdf({
         format: 'A4',
-        printBackground: true,
+        printBackground: true
         // displayHeaderFooter: true,
-         
     });
 
     req.ufile = {
@@ -171,9 +168,20 @@ exports.assignDataForUpdateProfile = (req, res, next) => {
         language: Object.values(req.body.json.resumeData.language)
     };
 
+    req.ufile = {
+        name: 'default/default-profile.jpeg',
+        contentType: 'image/jpeg',
+        imgName: `default-profile.jpeg`
+    };
     if (!req.file) return next();
+    const date = new Date().toLocaleDateString().replaceAll('/', '-');
     const name =
-        'profile/' + Date.now() * Math.random() + '-' + req.file.originalname;
+        'profile/' +
+        date +
+        '/' +
+        Date.now() * Math.random() +
+        '-' +
+        req.file.originalname;
     req.ufile = {
         name,
         body: req.file.buffer,
