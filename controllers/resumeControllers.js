@@ -98,6 +98,7 @@ exports.buildResume = catchAsync(async (req, res, next) => {
             req.resData.id = id;
         }
     }
+    console.log(req.tempUrl);
     req.body.json.resumeData.personalDetails.profileImage = req.tempUrl;
     const template = fs.readFileSync(pugPath, 'utf8');
 
@@ -109,7 +110,7 @@ exports.buildResume = catchAsync(async (req, res, next) => {
         4: 'Advanced',
         5: 'Proficient'
     };
-    console.log(req.body.json);
+
     const html = compiledTemplate(req.body.json.resumeData);
 
     const browser = await chromium.launch({ headless: true });
@@ -168,11 +169,10 @@ exports.assignDataForUpdateProfile = (req, res, next) => {
         language: Object.values(req.body.json.resumeData.language)
     };
 
-    req.ufile = {
-        name: 'default/default-profile.jpeg',
-        contentType: 'image/jpeg',
-        imgName: `default-profile.jpeg`
+    req.utfile = {
+        imgName: `default/default-profile.jpeg`
     };
+
     if (!req.file) return next();
     const date = new Date().toLocaleDateString().replaceAll('/', '-');
     const name =

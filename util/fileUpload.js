@@ -92,7 +92,7 @@ exports.getPublicUrl = catchAsync(async (req, res, next) => {
         }
     });
     const bucketName = process.env.AWS_BUCKET;
-    const objectKey = req.ufile.imgName;
+    const objectKey = req.utfile?.imgName ?? req.ufile?.imgName;
     const command = new GetObjectCommand({
         Bucket: bucketName,
         Key: objectKey
