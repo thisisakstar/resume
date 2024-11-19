@@ -57,6 +57,8 @@ router.get(
     '/test-template/:id',
     authControllers.protect,
     authControllers.restrictTo('admin'),
+    resumeControllers.giveTestingEvironmentForResume,
+    fileUpload.getPublicUrl,
     resumeControllers.testTemplate,
     fileUpload.uploadFiles,
     responseControllers.sendResponseData()

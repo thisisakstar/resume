@@ -98,8 +98,8 @@ exports.buildResume = catchAsync(async (req, res, next) => {
             req.resData.id = id;
         }
     }
-    console.log(req.tempUrl);
-    req.body.json.resumeData.personalDetails.profileImage = req.tempUrl;
+    req.body.json.resumeData.personalDetails.profileImage =
+        req.body.json.resumeData.personalDetails.profileImage ?? req.tempUrl;
     const template = fs.readFileSync(pugPath, 'utf8');
 
     const compiledTemplate = pug.compile(template);
@@ -175,6 +175,7 @@ exports.assignDataForUpdateProfile = (req, res, next) => {
 
     if (!req.file) return next();
     const date = new Date().toLocaleDateString().replaceAll('/', '-');
+    req.utfile = false;
     const name =
         'profile/' +
         date +
@@ -211,9 +212,8 @@ exports.testTemplate = catchAsync(async (req, res, next) => {
     pugPath = path.join(parentDirPath, filename);
 
     const template = fs.readFileSync(pugPath, 'utf8');
-
     const compiledTemplate = pug.compile(template);
-
+    sampleData.personalDetails.profileImage = req.tempUrl;
     const html = compiledTemplate(sampleData);
 
     const browser = await chromium.launch({ headless: true });
@@ -244,6 +244,14 @@ exports.assignDataforUpdate = (req, res, next) => {
     };
     req.body = {
         status: req.params.status === 'accept' ? 'accepted' : 'rejected'
+    };
+    return next();
+};
+
+// give testing evironment
+exports.giveTestingEvironmentForResume = (req, res, next) => {
+    req.utfile = {
+        imgName: `default/default-profile.jpeg`
     };
     return next();
 };

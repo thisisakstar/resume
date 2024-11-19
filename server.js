@@ -3,16 +3,22 @@ const dotenv = require('dotenv');
 const mongoose = require('mongoose');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
-const cors = require('cors');
+var compression = require('compression');
 const path = require('path');
+
+const AppError = require('./util/AppError');
 
 process.on('uncaughtException', (err) => {
     console.log(err.name, err.message, err.stack);
     process.exit(1);
 });
-dotenv.config({ path: './env/config.env' });
+
+// gzip compression
+
 const app = express();
-const AppError = require('./util/AppError');
+
+dotenv.config({ path: './env/config.env' });
+app.use(compression());
 
 // ============================================================
 // import controllers

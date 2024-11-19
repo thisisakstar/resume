@@ -56,6 +56,7 @@ exports.uploadMultipleImages = (fields) => uploadTemplate.fields(fields);
 // upload single file in aws s3
 exports.uploadFiles = catchAsync(async (req, res, next) => {
     if (!req.ufile) return next();
+
     const s3 = new S3Client({
         region: process.env.AWS_REGION,
         credentials: {
@@ -92,7 +93,7 @@ exports.getPublicUrl = catchAsync(async (req, res, next) => {
         }
     });
     const bucketName = process.env.AWS_BUCKET;
-    const objectKey = req.utfile?.imgName ?? req.ufile?.imgName;
+    const objectKey = req.ufile?.imgName ?? req.utfile?.imgName;
     const command = new GetObjectCommand({
         Bucket: bucketName,
         Key: objectKey
