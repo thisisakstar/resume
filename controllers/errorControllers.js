@@ -138,6 +138,7 @@ module.exports = (err, req, res, next) => {
         if (err.name === 'ValidationError') err = handleValidationErrorDB(err);
         if (err.name === 'JsonWebTokenError') err = handleInvalidToken(err);
         if (err.name === 'TokenExpiredError') err = hangleExpiredToken(err);
+        if (err.code === 413) err = handleLargeFileError(err);
         sendErrPro(err, req, res);
     }
     next();

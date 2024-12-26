@@ -55,6 +55,7 @@ exports.uploadMultipleImages = (fields) => uploadTemplate.fields(fields);
 
 // upload single file in aws s3
 exports.uploadFiles = catchAsync(async (req, res, next) => {
+     
     if (!req.ufile) return next();
 
     const s3 = new S3Client({

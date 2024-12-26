@@ -60,7 +60,14 @@ exports.buildResume = catchAsync(async (req, res, next) => {
                 lastTemplateId: req.body.json.resumeData.templateId,
                 resumeName: req.body.json.resumeData.resumeName,
                 rmuId: req.body.json.resumeData.resumeId,
-                resumeUrl: `https://deepblogs-resume.s3.ap-south-1.amazonaws.com/${fileName}`
+                resumeUrl: `https://deepblogs-resume.s3.ap-south-1.amazonaws.com/${fileName}`,
+                experienceNeed: req.body.json.resumeData.experienceNeed,
+                educationNeed: req.body.json.resumeData.educationNeed,
+                skillNeed: req.body.json.resumeData.skillNeed,
+                projectNeed: req.body.json.resumeData.projectNeed,
+                certificatesNeed: req.body.json.resumeData.certificatesNeed,
+                languageNeed: req.body.json.resumeData.languageNeed,
+                interestsNeed: req.body.json.resumeData.interestsNeed
             };
 
             const resume = await resumeModel.findOneAndUpdate(
@@ -157,17 +164,39 @@ exports.getHome = (req, res, next) => {
 };
 
 // assign data for update the profile images
-exports.assignDataForUpdateProfile = (req, res, next) => {
+exports.assignDataForUpdateProfile = catchAsync(async (req, res, next) => {
     req.body.json = JSON.parse(req.body.json);
-    req.body.json.resumeData = {
-        ...req.body.json.resumeData,
-        experience: Object.values(req.body.json.resumeData.experience),
-        education: Object.values(req.body.json.resumeData.education),
-        projects: Object.values(req.body.json.resumeData.projects),
 
-        certificates: Object.values(req.body.json.resumeData.certificates),
-        language: Object.values(req.body.json.resumeData.language)
-    };
+    // req.body.json.resumeData = {
+    //     ...req.body.json.resumeData,
+    //     experience: Object.values(req.body.json.resumeData.experience),
+    //     education: Object.values(req.body.json.resumeData.education),
+    //     projects: Object.values(req.body.json.resumeData.projects),
+    //     certificates: Object.values(req.body.json.resumeData.certificates),
+    //     language: Object.values(req.body.json.resumeData.language)
+    // };
+
+    await Promise.all(
+        Object.entries({
+            experienceNeed: 'experience',
+            educationNeed: 'education',
+            skillNeed: 'skill',
+            projectNeed: 'projects',
+            certificatesNeed: 'certificates',
+            languageNeed: 'language',
+            interestsNeed: 'interests'
+        }).map(([key, value]) => {
+            if (value === 'skill' || value === 'interests') {
+            } else if (
+                req.body.json.resumeData[key] &&
+                req.body?.json?.resumeData?.[value]
+            ) {
+                req.body.json.resumeData[value] = Object.values(
+                    req.body.json.resumeData[value]
+                );
+            }
+        })
+    );
 
     req.utfile = {
         imgName: `default/default-profile.jpeg`
@@ -190,9 +219,8 @@ exports.assignDataForUpdateProfile = (req, res, next) => {
         imgName: `${name}`
     };
     req.body.json.resumeData.personalDetails.profileImage = `https://deepblogs-resume.s3.ap-south-1.amazonaws.com/${name}`;
-
     return next();
-};
+});
 
 // test template
 exports.testTemplate = catchAsync(async (req, res, next) => {

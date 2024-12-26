@@ -206,11 +206,11 @@ const resumeSchema = new mongoose.Schema(
         ],
         skill: {
             type: Object,
-            required: [true, 'Skills should be included.']
+             
         },
         interests: {
             type: Object,
-            required: [true, 'Interests should be included.']
+             
         },
         language: [
             {
@@ -234,6 +234,34 @@ const resumeSchema = new mongoose.Schema(
             type: String,
             required: true,
             unique: true
+        },
+        experienceNeed: {
+            type: Boolean,
+            required: [true, 'Experience need should be included.']
+        },
+        educationNeed: {
+            type: Boolean,
+            required: [true, 'Education need should be included.']
+        },
+        skillNeed: {
+            type: Boolean,
+            required: [true, 'Skill need should be included.']
+        },
+        projectNeed: {
+            type: Boolean,
+            required: [true, 'Project need should be included.']
+        },
+        certificatesNeed: {
+            type: Boolean,
+            required: [true, 'Certificates need should be included.']
+        },
+        languageNeed: {
+            type: Boolean,
+            required: [true, 'Language need should be included.']
+        },
+        interestsNeed: {
+            type: Boolean,
+            required: [true, 'Interests need should be included.']
         },
         userId: {
             type: mongoose.Types.ObjectId,
