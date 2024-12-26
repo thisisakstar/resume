@@ -49,7 +49,7 @@ exports.createNew = factoryControllers.createOne(appReportModel);
 exports.verifyUser = catchAsync(async (req, res, next) => {
     if (req.query.code !== 'pq124')
         return next(new AppError(`undefined url ${req.originalUrl}`, 404));
-    else res.json({ status: 'Success', url: '/upload-templates' });
+    else res.json({ status: 'Success', url: '/upload-templatesupload-templates' });
 });
 
 exports.uploadNewTemplate = catchAsync(async (req, res, next) => {

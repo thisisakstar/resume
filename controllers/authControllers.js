@@ -93,19 +93,20 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 exports.logout = catchAsync((req, res, next) => {
-    let cookieOptions = {
-        expires: new Date(),
-        httpOnly: true
-    };
-    if (process.env.NODE_DEV === 'production') {
-        cookieOptions.secure = true;
-    }
+    console.dir(req.ip);
+    // let cookieOptions = {
+    //     expires: new Date(),
+    //     httpOnly: true
+    // };
+    // if (process.env.NODE_DEV === 'production') {
+    //     cookieOptions.secure = true;
+    // }
 
-    res.cookie('jwt', 'logout', cookieOptions);
+    // res.cookie('jwt', 'logout', cookieOptions);
 
-    return res.json({
-        status: 'Success'
-    });
+    // return res.json({
+    //     status: 'Success'
+    // });
 });
 exports.protect = catchAsync(async (req, res, next) => {
     let token;

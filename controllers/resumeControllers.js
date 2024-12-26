@@ -60,7 +60,7 @@ exports.buildResume = catchAsync(async (req, res, next) => {
                 lastTemplateId: req.body.json.resumeData.templateId,
                 resumeName: req.body.json.resumeData.resumeName,
                 rmuId: req.body.json.resumeData.resumeId,
-                resumeUrl: `https://db-resumes.s3.ap-south-1.amazonaws.com/${fileName}`
+                resumeUrl: `https://deepblogs-resume.s3.ap-south-1.amazonaws.com/${fileName}`
             };
 
             const resume = await resumeModel.findOneAndUpdate(
@@ -80,7 +80,7 @@ exports.buildResume = catchAsync(async (req, res, next) => {
                     userId: req.user._id,
                     userEId: req.user.uuuId,
                     lastTemplateId: req.body.json.resumeData.lastTemplateId,
-                    resumeUrl: `https://db-resumes.s3.ap-south-1.amazonaws.com/${fileName}`
+                    resumeUrl: `https://deepblogs-resume.s3.ap-south-1.amazonaws.com/${fileName}`
                 });
             }
             req.resData.id = req.body.json.resumeData.rmuId;
@@ -93,7 +93,7 @@ exports.buildResume = catchAsync(async (req, res, next) => {
                 userId: req.user._id,
                 userEId: req.user.uuuId,
                 lastTemplateId: req.body.json.resumeData.templateId,
-                resumeUrl: `https://db-resumes.s3.ap-south-1.amazonaws.com/${fileName}`
+                resumeUrl: `https://deepblogs-resume.s3.ap-south-1.amazonaws.com/${fileName}`
             });
             req.resData.id = id;
         }
@@ -132,7 +132,7 @@ exports.buildResume = catchAsync(async (req, res, next) => {
         contentType: 'application/pdf'
     };
 
-    req.resData.url = `https://db-resumes.s3.ap-south-1.amazonaws.com/${fileName}`;
+    req.resData.url = `https://deepblogs-resume.s3.ap-south-1.amazonaws.com/${fileName}`;
     req.resData.name = req.body.json.resumeData.resumeName;
     return next();
 });
@@ -189,7 +189,7 @@ exports.assignDataForUpdateProfile = (req, res, next) => {
         contentType: req.file.mimetype,
         imgName: `${name}`
     };
-    req.body.json.resumeData.personalDetails.profileImage = `https://db-resumes.s3.ap-south-1.amazonaws.com/${name}`;
+    req.body.json.resumeData.personalDetails.profileImage = `https://deepblogs-resume.s3.ap-south-1.amazonaws.com/${name}`;
 
     return next();
 };
@@ -232,7 +232,7 @@ exports.testTemplate = catchAsync(async (req, res, next) => {
         contentType: 'application/pdf'
     };
     req.resData = {};
-    req.resData.url = `https://db-resumes.s3.ap-south-1.amazonaws.com/${fileName}`;
+    req.resData.url = `https://deepblogs-resume.s3.ap-south-1.amazonaws.com/${fileName}`;
     req.resData.name = templates.temuId;
     return next();
 });
