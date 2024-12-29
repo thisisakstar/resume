@@ -1,0 +1,48 @@
+{
+    "personalDetails": {
+        "firstName": "Nyssa",
+        "lastName": "Sheppard",
+        "dateOfBirth": "24-Jul-1979",
+        "professionalTitle": "Harum tempora tempor",
+        "objective": "Velit consequatur q",
+        "linkedIn": "Sed dolor aut repell",
+        "github": "Et sequi ipsum tota",
+        "youtube": "Laborum Rerum vel a"
+    },
+    "contactDetails": {
+        "email": "jihumy@mailinator.com",
+        "phone": "+1 (553) 122-8148",
+        "country": "Velit proident eu c",
+        "city": "Eaque proident do a",
+        "address": "Suscipit eos et aliq"
+    },
+    "education": [
+        {
+            "programName": "Garth Fernandez",
+            "school": "Autem ipsum eligendi",
+            "from": "Nostrud natus consec",
+            "to": "",
+            "present": true,
+            "percentage": "64",
+            "city": "Sed perspiciatis do"
+        }
+    ],
+    "certificates": [
+        {
+            "description": { "1735249758890": "Et duis qui qui esse" },
+            "certificateName": "Harding Holcomb",
+            "from": "Voluptatem harum qu",
+            "to": "",
+            "present": true
+        }
+    ],
+    "experienceNeed": false,
+    "educationNeed": true,
+    "skillNeed": false,
+    "projectNeed": false,
+    "certificatesNeed": true,
+    "languageNeed": false,
+    "interestsNeed": false,
+    "resumeName": "rgter",
+    "templateId": "2b0cdfd4-5a93-5594-af43-b31a1e10da53"
+}

@@ -199,7 +199,7 @@ exports.assignDataForUpdateProfile = catchAsync(async (req, res, next) => {
     );
 
     req.utfile = {
-        imgName: `default/default-profile.jpeg`
+        imgName: `default/default-profile.png`
     };
 
     if (!req.file) return next();
@@ -279,7 +279,7 @@ exports.assignDataforUpdate = (req, res, next) => {
 // give testing evironment
 exports.giveTestingEvironmentForResume = (req, res, next) => {
     req.utfile = {
-        imgName: `default/default-profile.jpeg`
+        imgName: `default/default-profile.png`
     };
     return next();
 };
